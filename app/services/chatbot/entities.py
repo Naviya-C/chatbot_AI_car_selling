@@ -10,7 +10,7 @@ def extract_budget(message: str) -> float | None:
     if not match:
         return None
     
-    value = int(match.group(1))
+    value = float(match.group(1))
     unit = match.group(2)
 
     if unit == "million":

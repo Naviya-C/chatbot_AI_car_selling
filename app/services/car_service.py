@@ -1,4 +1,4 @@
-from app.repositories.car_repo import get_cars_under_price, get_cars_by_fuel_type, get_available_cars
+from app.repositories.car_repo import get_cars_under_price, get_available_cars
 
 def fetch_cars_under_price(max_price: float):
     cars = get_cars_under_price(max_price)

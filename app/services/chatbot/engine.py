@@ -11,9 +11,16 @@ from app.services.car_service import (
     get_best_cars_under_budget, 
     list_all_cars
 )
+from app.services.chatbot.memory import ConversationMemory
+from app.services.chatbot.context import resolve_budget
+
+memory = ConversationMemory()
 
 def process_message(message: str) -> str:
     intent = detect_intent(message)
+    budget = extract_budget(message)
+    
+    budget = resolve_budget(budget, memory)
 
     if intent == "cars_under_budget":
         budget = extract_budget(message)

@@ -19,38 +19,37 @@ memory = ConversationMemory()
 def process_message(message: str) -> str:
     intent = detect_intent(message)
     budget = extract_budget(message)
-    
+
     budget = resolve_budget(budget, memory)
 
     if intent == "cars_under_budget":
-        budget = extract_budget(message)
         if budget is None:
             return "Could you please specify your budget?"
-        
-        cars = fetch_cars_under_price(budget)
-        if "message" in cars:
-            return no_results_response()
-        
-        best_cars = get_best_cars_under_budget(budget)
-        return best_cars_response(best_cars)
 
-    elif intent == "best_car":
-        budget = extract_budget(message)
+        cars = fetch_cars_under_price(budget)
+        if not cars:
+            return no_results_response()
+
+        memory.update(intent=intent, budget=budget, results=cars)
+        return cars_list_response(cars)
+
+    if intent == "best_car":
         if budget is None:
             return "Could you please specify your budget for the best car?"
-        
+
         best_cars = get_best_cars_under_budget(budget)
         if not best_cars:
             return no_results_response()
-        
+
+        memory.update(intent=intent, budget=budget, results=best_cars)
         return best_cars_response(best_cars)
 
-    elif intent == "list_cars":
+    if intent == "list_cars":
         cars = list_all_cars()
         if not cars:
             return no_results_response()
-        
+
+        memory.update(intent=intent, results=cars)
         return cars_list_response(cars)
 
-    else:
-        return fallback_response()
+    return fallback_response()

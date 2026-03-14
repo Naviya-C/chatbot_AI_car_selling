@@ -89,12 +89,13 @@ def vector_search(
         sql_query += " ORDER BY vector_score ASC "
 
     sql = text(sql_query)
-
-    with engine.connect() as conn:
-        result = conn.execute(sql, params)
-        return [dict(row) for row in result.mappings()]
     
     # brand filter
     if brand:
         sql_query += " AND LOWER(c.brand) = LOWER(:brand) "
         params["brand"] = brand
+
+    with engine.connect() as conn:
+        result = conn.execute(sql, params)
+        return [dict(row) for row in result.mappings()]
+    

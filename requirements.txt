@@ -3,7 +3,7 @@ uvicorn[standard]==0.40.0
 
 sentence-transformers==5.2.0
 transformers==4.57.6
-torch==2.10.0
+
 
 scikit-learn==1.8.0
 numpy==2.4.1

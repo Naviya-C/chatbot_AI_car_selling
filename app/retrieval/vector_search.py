@@ -15,7 +15,7 @@ def vector_search(
     fuel_type=None,
     condition=None,
     max_mileage=None,
-    brand = None
+    brand=None
 ):
 
     vector_json = json.dumps(query_embedding)
@@ -47,7 +47,9 @@ def vector_search(
         "vec": vector_json
     }
 
-    # price filters
+    # -----------------------------
+    # PRICE FILTERS
+    # -----------------------------
     if max_price is not None:
         sql_query += " AND c.price <= :max_price "
         params["max_price"] = max_price
@@ -56,46 +58,59 @@ def vector_search(
         sql_query += " AND c.price >= :min_price "
         params["min_price"] = min_price
 
-    # transmission filter
+    # -----------------------------
+    # BRAND FILTER
+    # -----------------------------
+    if brand:
+        sql_query += " AND LOWER(c.brand) LIKE LOWER(:brand) "
+        params["brand"] = f"%{brand}%"
+
+    # -----------------------------
+    # TRANSMISSION FILTER
+    # -----------------------------
     if transmission:
         sql_query += " AND LOWER(c.transmission) = LOWER(:transmission) "
         params["transmission"] = transmission
 
-    # fuel filter
+    # -----------------------------
+    # FUEL FILTER
+    # -----------------------------
     if fuel_type:
         sql_query += " AND LOWER(c.fuel_type) LIKE LOWER(:fuel_type) "
         params["fuel_type"] = f"%{fuel_type}%"
-        print("SQL:", sql_query)
-        print("PARAMS:", params)
 
-    # condition filter
+    # -----------------------------
+    # CONDITION FILTER
+    # -----------------------------
     if condition:
         sql_query += " AND LOWER(c.condition) = LOWER(:condition) "
         params["condition"] = condition
 
-    # mileage filter
+    # -----------------------------
+    # MILEAGE FILTER
+    # -----------------------------
     if max_mileage is not None:
         sql_query += " AND c.mileage <= :max_mileage "
         params["max_mileage"] = max_mileage
 
-    # sorting logic
+    # -----------------------------
+    # SORTING (ALWAYS LAST)
+    # -----------------------------
     if sort == "price_asc":
-        sql_query += " ORDER BY c.price ASC " 
-
+        sql_query += " ORDER BY c.price ASC "
     elif sort == "price_desc":
         sql_query += " ORDER BY c.price DESC "
-
     else:
         sql_query += " ORDER BY vector_score ASC "
-    
-    # brand filter
-    if brand:
-        sql_query += " AND LOWER(c.brand) = LOWER(:brand) "
-        params["brand"] = brand
+
+    # -----------------------------
+    # DEBUG
+    # -----------------------------
+    print("FINAL SQL:", sql_query)
+    print("PARAMS:", params)
 
     sql = text(sql_query)
-    
+
     with engine.connect() as conn:
         result = conn.execute(sql, params)
-        return [dict(row) for row in result.mappings()]
-    
+        return [dict(row) for row in result.mappings()] 

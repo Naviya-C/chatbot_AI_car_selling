@@ -1,0 +1,6 @@
+__pycache__
+.env
+./app/utils/intent_dataset.csv
+*.ipynb
+*.csv
+venv/

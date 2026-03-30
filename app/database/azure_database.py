@@ -11,8 +11,8 @@ def get_engine():
     params = urllib.parse.quote_plus(conn_str)
 
     engine = create_engine(
-        f"mssql+pyodbc:///?odbc_connect={params}",
-        pool_pre_ping=True
+        f"mssql+pyodbc:///?odbc_connect={params}", 
+        pool_pre_ping=True # check connection before using
     )
 
     return engine

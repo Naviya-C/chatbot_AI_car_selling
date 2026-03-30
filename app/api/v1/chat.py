@@ -11,15 +11,15 @@ router = APIRouter()
 @router.post("/chat", response_model=ChatResponse)
 def chat_endpoint(request: ChatRequest):
 
-    # 1️⃣ Predict intent
+    # Predict intent
     intent, confidence = predict_intent(request.query)
     print(intent)
     print(confidence)
     # confidence safety
-    if confidence < 0.7:
+    if confidence < 0.7: 
         intent = "fallback_help"
 
-    # 2️⃣ Retrieval only if needed
+    # Retrieval only if needed
     retrieved = []
     if intent in [
         "search_car",
@@ -31,7 +31,7 @@ def chat_endpoint(request: ChatRequest):
     ]:
         retrieved = retrieve_cars(request.query) 
 
-    # 3️⃣ Route response
+    # Route response
     if intent in [
         "search_car",
         "sort_year",
@@ -50,7 +50,7 @@ def chat_endpoint(request: ChatRequest):
     else:
         response = intent_route(intent, request.query)
 
-    # 4️⃣ Safety fallback
+    # Safety fallback
     if not isinstance(response, str):
         response = "I'm sorry, something went wrong. Please try again."
 

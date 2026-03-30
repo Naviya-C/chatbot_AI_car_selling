@@ -4,7 +4,7 @@ from app.core.embeddings import embed_texts
 from app.utils.util import chunk_text
 
 from typing import List
-from sqlalchemy import text
+from sqlalchemy import text 
 
 logger = get_logger(__name__)
 engine = get_engine()
@@ -24,7 +24,7 @@ def load_cars() -> List[dict]:
 
     with engine.connect() as conn:
         result = conn.execute(query)
-        cars = result.mappings().all()
+        cars = result.mappings().all() # map results into the dictionary.
 
     if not cars:
         logger.warning("No car records found")
@@ -74,7 +74,7 @@ def ingest_cars(cars: List[dict]) -> None:
                 if not chunks:
                     continue
 
-                embeddings = embed_texts(chunks)
+                embeddings = embed_texts(chunks) 
 
                 for idx, (chunk, embed) in enumerate(zip(chunks, embeddings)):
                     vector_string = "[" + ",".join(map(str, embed)) + "]"

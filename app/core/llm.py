@@ -47,8 +47,8 @@ Customer question:
         response = client.chat.completions.create(
             model="llama-3.1-8b-instant",
             messages=messages,
-            temperature=0.4,
-            max_tokens=300
+            temperature = 0.4,
+            max_tokens = 300
         )
 
 

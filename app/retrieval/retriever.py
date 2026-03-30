@@ -149,10 +149,10 @@ def parse_mileage(query):
 
 def retrieve_cars(query: str, top_k: int = 5):
 
-    # 1️⃣ Convert query to embedding
+    # Convert query to embedding
     embedding = embed_text(query)
 
-    # 2️⃣ Parse filters
+    # Parse filters
     min_price, max_price, sort = parse_price_condition(query)
     brand = parse_brand(query)
     transmission = parse_transmission(query)
@@ -170,8 +170,8 @@ def retrieve_cars(query: str, top_k: int = 5):
     print("condition:", condition)
     print("max_mileage:", max_mileage) 
     print("sort:", sort)
-
-    # 3️⃣ Vector search + metadata filters
+ 
+    # Vector search + metadata filters
     results = vector_search(
         query_embedding=embedding,
         top_k=top_k,
